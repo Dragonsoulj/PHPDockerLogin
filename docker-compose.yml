@@ -1,0 +1,27 @@
+version: '2'
+services:
+  mysql:
+    container_name: mysqllogin
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./data:/var/lib/mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=SuperSecure
+      - MYSQL_DATABASE=phplogin
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=db_pass
+    ports:
+      - "8002:3306"
+  website:
+    container_name: phplogin
+    image: php:login_test
+    build:
+      context: ./
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - 8000:80
+    depends_on:
+      - mysql
